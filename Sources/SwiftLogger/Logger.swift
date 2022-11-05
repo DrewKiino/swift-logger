@@ -1,8 +1,8 @@
 //
 //  Logger.swift
-//  
+//  Logger
 //
-//  Created by Andrew Aquino on 11/4/22.
+//  Created by Andrew Aquino on 4/20/20.
 //
 
 import Combine
@@ -58,8 +58,6 @@ public class Logger {
   }
   
   private func invalidLogLevel(_ logLevel: LogLevel) -> Bool {
-    /// Allow logs in AppStore and TestFlight builds
-    if AppSource.current == .AppStore || AppSource.current == .TestFlight { return false }
     if let logLevels = envStringArray("LOGGER_LEVELS")?.filter(\.isNotEmpty) {
       if logLevels.isEmpty {
         return true
@@ -70,8 +68,6 @@ public class Logger {
   }
   
   private func invalidLogIdentifier(_ identifier: String) -> Bool {
-    /// Allow logs in AppStore and TestFlight builds
-    if AppSource.current == .AppStore || AppSource.current == .TestFlight { return false }
     if let identifiers = envStringArray("LOGGER_IDS")?.filter(\.isNotEmpty),
        identifiers.isNotEmpty,
        !identifiers.contains(identifier) {
@@ -89,6 +85,7 @@ public class Logger {
   }
   
   private func printToConsole(_ log: Log) {
+    if LoggerAdmin.shared.delegate?.loggerAdmin(isLogInvalid: log) ?? false { return }
     if invalidLogLevel(log.logLevel) { return }
     if invalidLogIdentifier(log.identifier) { return }
     os_log(
