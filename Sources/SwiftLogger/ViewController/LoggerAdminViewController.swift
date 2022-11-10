@@ -182,7 +182,7 @@ extension LoggerAdminViewController: UITableViewDelegate, UITableViewDataSource 
         if let colorHexString = fileToColorHexString[fileName] {
           return UIColor(colorHexString)
         }
-        let random = UIColor.random(alpha: 0.1)
+        let random = UIColor.random(alpha: 0.05)
         fileToColorHexString[fileName] = random.hexString
         return random
       }()
