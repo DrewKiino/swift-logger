@@ -16,6 +16,8 @@ public class LoggerAdminViewController: UIViewController {
   private let logger = CoreLogger.shared
   
   private var logs: [Log] = []
+    
+  private var fileToColorHexString: [String: String] = [:]
   
   private lazy var tableView: UITableView = {
     let view = UITableView()
@@ -175,7 +177,16 @@ extension LoggerAdminViewController: UITableViewDelegate, UITableViewDataSource 
   public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     if let cell = tableView.dequeueReusableCell(withIdentifier: LoggerAdminTableViewCell.reuseIdentifier) as? LoggerAdminTableViewCell {
       let log = self.logs[indexPath.row]
+      let fileName = log.callSite.file
       cell.configure(withLog: log)
+      cell.backgroundColor = {
+        if let colorHexString = self.fileToColorHexString[fileName] {
+          return UIColor(colorHexString)
+        }
+        let random = UIColor.random(alpha: 0.1)
+        self.fileToColorHexString[fileName] = random.hexString
+        return random
+      }()
       return cell
     }
     return .init()
