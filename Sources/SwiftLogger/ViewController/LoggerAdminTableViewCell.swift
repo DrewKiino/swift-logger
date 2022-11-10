@@ -11,6 +11,12 @@ import UIKit
 internal class LoggerAdminTableViewCell: UITableViewCell {
   internal static let reuseIdentifier = "LoggerAdminTableViewCell"
   
+  public let containerBackgroundView: UIView = {
+    let view = UIView()
+    view.backgroundColor = .clear
+    return view
+  }()
+  
   private lazy var verbosityLabel: UITextView = {
     let view = UITextView()
     view.translatesAutoresizingMaskIntoConstraints = false
@@ -55,6 +61,7 @@ internal class LoggerAdminTableViewCell: UITableViewCell {
   private func configureLayout() {
     self.layoutMargins = UIEdgeInsets(top: 8.0, left: 16.0, bottom: 8.0, right: 16.0)
     
+    self.contentView.addSubview(self.containerBackgroundView)
     self.contentView.addSubview(self.verbosityLabel)
     self.contentView.addSubview(self.dateLabel)
     self.contentView.addSubview(self.callsiteLabel)
@@ -62,6 +69,8 @@ internal class LoggerAdminTableViewCell: UITableViewCell {
     
     let superview = self.contentView
     let layoutMargins = self.layoutMargins
+    
+    self.containerBackgroundView.anchorToSuperview()
     
     NSLayoutConstraint.activate([
       /// verbosity label
