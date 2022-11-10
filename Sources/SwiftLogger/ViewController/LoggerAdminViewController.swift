@@ -178,14 +178,6 @@ extension LoggerAdminViewController: UITableViewDelegate, UITableViewDataSource 
       let log = self.logs[indexPath.row]
       let fileName = log.callSite.file
       cell.configure(withLog: log)
-      cell.containerBackgroundView.backgroundColor = {
-        if let colorHexString = fileToColorHexString[fileName] {
-          return UIColor(colorHexString)
-        }
-        let random = UIColor.random(alpha: 0.05)
-        fileToColorHexString[fileName] = random.hexString
-        return random
-      }()
       return cell
     }
     return .init()
