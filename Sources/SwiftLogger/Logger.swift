@@ -88,15 +88,19 @@ public class Logger {
     if LoggerAdmin.shared.delegate?.loggerAdmin(isLogInvalid: log) ?? false { return }
     if invalidLogLevel(log.logLevel) { return }
     if invalidLogIdentifier(log.identifier) { return }
-    os_log(
-      "%@%@%@",
-      log: .default,
-      type: log.osLogType,
-      log.traceString,
-      log.delimiter,
-      log.value
-    )
-    CoreLogger.shared.processLog(log)
+    if LoggerAdmin.shared.delegate?.loggerAdmin(skipCacheToLogBook: log) != true {
+      CoreLogger.shared.processLog(log)
+    }
+    if LoggerAdmin.shared.delegate?.loggerAdmin(skipPrintToConsole: log) != true {
+      os_log(
+        "%@%@%@",
+        log: .default,
+        type: log.osLogType,
+        log.traceString,
+        log.delimiter,
+        log.value
+      )
+    }
   }
   
   public func debug<T: Any>(
