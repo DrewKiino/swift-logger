@@ -46,15 +46,17 @@ public class Logger {
     file: String = #file,
     line: UInt = #line
   ) {
-    let callSite = sessionCallSite ?? CallSite(function: function, file: file, line: line)
-    items.append(
-      Log(
-        identifier: identifier,
-        logLevel: logLevel,
-        value: value,
-        callSite: callSite
+    CoreLogger.shared.logQueue.sync {
+      let callSite = sessionCallSite ?? CallSite(function: function, file: file, line: line)
+      items.append(
+        Log(
+          identifier: identifier,
+          logLevel: logLevel,
+          value: value,
+          callSite: callSite
+        )
       )
-    )
+    }
   }
   
   private func invalidLogLevel(_ logLevel: LogLevel) -> Bool {
@@ -77,11 +79,13 @@ public class Logger {
   }
   
   public func flush() {
-    history += items
-    items.forEach { log in
-      printToConsole(log)
+    CoreLogger.shared.logQueue.sync {
+      history += items
+      self.items.forEach { log in
+        self.printToConsole(log)
+      }
+      items.removeAll()
     }
-    items.removeAll()
   }
   
   private func printToConsole(_ log: Log) {
@@ -109,10 +113,12 @@ public class Logger {
     file: String = #file,
     line: UInt = #line
   ) {
-    let callSite = CallSite(function: function, file: file, line: line)
-    self.printToConsole(
-      Log(identifier: identifier, logLevel: .debug, value: value, callSite: callSite)
-    )
+    CoreLogger.shared.logQueue.sync {
+      let callSite = CallSite(function: function, file: file, line: line)
+      self.printToConsole(
+        Log(identifier: identifier, logLevel: .debug, value: value, callSite: callSite)
+      )
+    }
   }
   
   public func system<T>(
@@ -121,10 +127,12 @@ public class Logger {
     file: String = #file,
     line: UInt = #line
   ) {
-    let callSite = CallSite(function: function, file: file, line: line)
-    self.printToConsole(
-      Log(identifier: identifier, logLevel: .system, value: value, callSite: callSite)
-    )
+    CoreLogger.shared.logQueue.sync {
+      let callSite = CallSite(function: function, file: file, line: line)
+      self.printToConsole(
+        Log(identifier: identifier, logLevel: .system, value: value, callSite: callSite)
+      )
+    }
   }
   
   public func error<T>(
@@ -133,10 +141,12 @@ public class Logger {
     file: String = #file,
     line: UInt = #line
   ) {
-    let callSite = CallSite(function: function, file: file, line: line)
-    self.printToConsole(
-      Log(identifier: identifier, logLevel: .error, value: value, callSite: callSite)
-    )
+    CoreLogger.shared.logQueue.sync {
+      let callSite = CallSite(function: function, file: file, line: line)
+      self.printToConsole(
+        Log(identifier: identifier, logLevel: .error, value: value, callSite: callSite)
+      )
+    }
   }
   
   public func warning<T>(
@@ -145,10 +155,12 @@ public class Logger {
     file: String = #file,
     line: UInt = #line
   ) {
-    let callSite = CallSite(function: function, file: file, line: line)
-    self.printToConsole(
-      Log(identifier: identifier, logLevel: .warning, value: value, callSite: callSite)
-    )
+    CoreLogger.shared.logQueue.sync {
+      let callSite = CallSite(function: function, file: file, line: line)
+      self.printToConsole(
+        Log(identifier: identifier, logLevel: .warning, value: value, callSite: callSite)
+      )
+    }
   }
   
   public func info<T>(
@@ -157,10 +169,12 @@ public class Logger {
     file: String = #file,
     line: UInt = #line
   ) {
-    let callSite = CallSite(function: function, file: file, line: line)
-    self.printToConsole(
-      Log(identifier: identifier, logLevel: .info, value: value, callSite: callSite)
-    )
+    CoreLogger.shared.logQueue.sync {
+      let callSite = CallSite(function: function, file: file, line: line)
+      self.printToConsole(
+        Log(identifier: identifier, logLevel: .info, value: value, callSite: callSite)
+      )
+    }
   }
   
   public func verbose<T>(
@@ -169,9 +183,11 @@ public class Logger {
     file: String = #file,
     line: UInt = #line
   ) {
-    let callSite = CallSite(function: function, file: file, line: line)
-    self.printToConsole(
-      Log(identifier: identifier, logLevel: .verbose, value: value, callSite: callSite)
-    )
+    CoreLogger.shared.logQueue.sync {
+      let callSite = CallSite(function: function, file: file, line: line)
+      self.printToConsole(
+        Log(identifier: identifier, logLevel: .verbose, value: value, callSite: callSite)
+      )
+    }
   }
 }

@@ -21,7 +21,7 @@ internal class CoreLogger {
 
   internal static let shared = CoreLogger()
     
-  private let logQueue = DispatchQueue(label: "Logger.queue", qos: .background)
+  public let logQueue = DispatchQueue(label: "Logger.queue", qos: .background)
   private let userDefaults: UserDefaults
   
   internal private(set) var logBook: LogBook
@@ -43,25 +43,23 @@ internal class CoreLogger {
   }
 
   internal func processLog(_ log: Log) {
-    self.logQueue.sync {
-      /// Write to log file
-      self.writeToLogFile(log.value)
-      /// Append to console logs
-      self.logBook = LogBook(
-        logs: {
-          var logs = self.logBook.logs
-          /// Remove logs that are older than 2 days
-          if let log = logs.first, log.loggedAt.timeIntervalSinceNow + (3600 * 48) < 0 {
-            logs.removeFirst()
-          }
-          logs.append(log)
-          return logs
-        }(),
-        writtenAt: self.logBook.writtenAt
-      )
-      /// Save log book
-      self.saveLogBook()
-    }
+    /// Write to log file
+    self.writeToLogFile(log.value)
+    /// Append to console logs
+    self.logBook = LogBook(
+      logs: {
+        var logs = self.logBook.logs
+        /// Remove logs that are older than 2 days
+        if let log = logs.first, log.loggedAt.timeIntervalSinceNow + (3600 * 48) < 0 {
+          logs.removeFirst()
+        }
+        logs.append(log)
+        return logs
+      }(),
+      writtenAt: self.logBook.writtenAt
+    )
+    /// Save log book
+    self.saveLogBook()
   }
   
   private func writeToLogFile(_ string: String) {
