@@ -42,9 +42,20 @@ final class SwiftLoggerTests: XCTestCase {
 }
 
 public class LoggerAdminDelegateTester: LoggerAdminDelegate {
+  public func loggerAdmin(isAbleToPresentLogBook admin: SwiftLogger.LoggerAdmin) -> Bool {
+    false
+  }
   
   public var loggerAdminIsInvalidLogHandler: ((Log) -> Bool)!
-  public func loggerAdmin(isLogInvalid log: Log) -> Bool {
+  public func loggerAdmin(isLogInvalid log: SwiftLogger.Log) -> Bool {
     self.loggerAdminIsInvalidLogHandler(log)
+  }
+  
+  public func loggerAdmin(skipCacheToLogBook log: SwiftLogger.Log) -> Bool {
+    false
+  }
+  
+  public func loggerAdmin(skipPrintToConsole log: SwiftLogger.Log) -> Bool {
+    false
   }
 }

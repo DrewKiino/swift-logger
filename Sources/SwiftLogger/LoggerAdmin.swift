@@ -15,13 +15,6 @@ public protocol LoggerAdminDelegate: AnyObject {
   func loggerAdmin(skipPrintToConsole log: Log) -> Bool
 }
 
-public extension LoggerAdminDelegate {
-  func loggerAdmin(isAbleToPresentLogBook admin: LoggerAdmin) -> Bool { false }
-  func loggerAdmin(isLogInvalid log: Log) -> Bool { false }
-  func loggerAdmin(skipCacheToLogBook log: Log) -> Bool { false }
-  func loggerAdmin(skipPrintToConsole log: Log) -> Bool { false }
-}
-
 public class LoggerAdmin {
   public static let shared = LoggerAdmin()
   

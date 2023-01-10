@@ -89,13 +89,17 @@ public class Logger {
   }
   
   private func printToConsole(_ log: Log) {
-    if LoggerAdmin.shared.delegate?.loggerAdmin(isLogInvalid: log) ?? false { return }
+    if let delegate = LoggerAdmin.shared.delegate, delegate.loggerAdmin(isLogInvalid: log) {
+      return
+    }
     if invalidLogLevel(log.logLevel) { return }
     if invalidLogIdentifier(log.identifier) { return }
-    if LoggerAdmin.shared.delegate?.loggerAdmin(skipCacheToLogBook: log) != true {
+    if let delegate = LoggerAdmin.shared.delegate, delegate.loggerAdmin(skipCacheToLogBook: log) {
+    } else {
       CoreLogger.shared.processLog(log)
     }
-    if LoggerAdmin.shared.delegate?.loggerAdmin(skipPrintToConsole: log) != true {
+    if let delegate = LoggerAdmin.shared.delegate, delegate.loggerAdmin(skipPrintToConsole: log) {
+    } else {
       os_log(
         "%@%@%@",
         log: .default,
